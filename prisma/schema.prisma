@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  username     String
+  uid          Int          @id @default(autoincrement())
+  email        String       @unique
+  passwordHash String
+  cafe         Cafe?
+  distributor  Distributor?
+  supplier     Supplier?
+  role         UserRole
+}
+
+model Cafe {
+  cid       Int      @id @default(autoincrement())
+  dateOfReg DateTime @default(now())
+  uid       Int      @unique
+  user      User     @relation(fields: [uid], references: [uid])
+  orders    Order[]
+}
+
+model Distributor {
+  did       Int      @id @default(autoincrement())
+  dateOfReg DateTime @default(now())
+  uid       Int      @unique
+  user      User     @relation(fields: [uid], references: [uid])
+  orders    Order[]
+}
+
+model Supplier {
+  sid       Int               @id @default(autoincrement())
+  dateOfReg DateTime          @default(now())
+  uid       Int               @unique
+  user      User              @relation(fields: [uid], references: [uid])
+  products  ProductSupplier[]
+}
+
+enum UserRole {
+  CAFE
+  DISTRIBUTOR
+  SUPPLIER
+}
+
+model Product {
+  pid           Int               @id @default(autoincrement())
+  pname         String
+  price         Decimal
+  inventory     Inventory?
+  orderProducts OrderProduct[]
+  suppliers     ProductSupplier[]
+}
+
+model Order {
+  oid         Int            @id @default(autoincrement())
+  cid         Int
+  cafe        Cafe           @relation(fields: [cid], references: [cid])
+  did         Int
+  distributor Distributor    @relation(fields: [did], references: [did])
+  status      OrderStatus    @default(PENDING)
+  products    OrderProduct[]
+}
+
+model Inventory {
+  pid     Int     @id
+  product Product @relation(fields: [pid], references: [pid])
+  stock   Int
+}
+
+model OrderProduct {
+  oid                Int
+  order              Order   @relation(fields: [oid], references: [oid])
+  pid                Int
+  product            Product @relation(fields: [pid], references: [pid])
+  quantity           Int
+  priceAtOrderPlaced Decimal
+
+  @@id([oid, pid])
+}
+
+model ProductSupplier {
+  pid           Int
+  product       Product  @relation(fields: [pid], references: [pid])
+  sid           Int
+  supplier      Supplier @relation(fields: [sid], references: [sid])
+  moq           Int
+  purchasePrice Decimal
+
+  @@id([sid, pid])
+}
+
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  PROCESSING
+  DISPATCHED
+  DELIVERED
+  CANCELLED
+}

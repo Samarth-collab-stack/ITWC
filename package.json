@@ -1,0 +1,27 @@
+{
+  "name": "itwc",
+  "version": "1.0.0",
+  "description": "ITWC is a B2B distribution platform designed to connect cafés and other businesses with distributors while streamlining the ordering, procurement, and fulfilment process.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Samarth-collab-stack/ITWC.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Samarth-collab-stack/ITWC/issues"
+  },
+  "homepage": "https://github.com/Samarth-collab-stack/ITWC#readme",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "pg": "^8.23.0",
+    "prisma": "^7.10.0"
+  }
+}
